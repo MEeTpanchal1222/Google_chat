@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_chat/main.dart';
+import 'package:get/get.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../../../controler/AnimationController.dart';
+import '../../../helper/Google_firebase_services.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,19 +13,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isAnimated = false;
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration(milliseconds: 500),(){
-      setState(() {
-        _isAnimated = true;
-      });
-    });
 
-  }
   @override
   Widget build(BuildContext context) {
+    final AnimationControl animController = Get.put(AnimationControl());
     mq = MediaQuery.of(context).size;
     return Scaffold(
         appBar:  AppBar(
@@ -31,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           AnimatedPositioned(
             top: mq.height*.15,
-              right:_isAnimated? mq.width*.25: mq.width*.5,
+              right:animController.isAnimated.value? mq.width*.25: mq.width*.5,
               width: mq.width*.5,
               duration: Duration(seconds: 1 ),
               child: Image.asset('assets/Google_chat.png')),
@@ -41,7 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
               width: mq.width*.8,
               height: mq.height*.07,
               child: ElevatedButton.icon(
-                onPressed: () {
+                onPressed: () async {
+                  String status = await GoogleFirebaseServices.googleFirebaseServices
+                      .signInWithGoogle();
+                  Fluttertoast.showToast(msg: status);
+                  if (status == 'Suceess') {
+                    Get.offAndToNamed('/home');
+                  }
                 },
                   icon: Image.asset('assets/icons/GOOGLE.png',height: mq.height*05,),
                  label: RichText(
@@ -59,6 +60,37 @@ class _LoginScreenState extends State<LoginScreen> {
                  ),
                 style:ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade50
+
+                ),
+              )),
+          Positioned(
+              bottom: mq.height*.10,
+              left: mq.width*.09,
+              width: mq.width*.8,
+              height: mq.height*.07,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                    Get.toNamed("/signin");
+                },
+                icon: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Image.asset('assets/icons/envelope.png',height: mq.height*.2,width: mq.width*.12,),
+                ),
+                label: RichText(
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.black,fontSize:19),
+                      children: [
+                        TextSpan(text: 'Sign In with '),
+                        TextSpan(text: 'Email',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700
+                            )
+                        )
+                      ]
+                  ),
+                ),
+                style:ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade50
 
                 ),
               )),

@@ -13,8 +13,12 @@ class AppThemes {
         color: Colors.black,
         fontWeight: FontWeight.normal,
         fontSize: 19),
-    backgroundColor: Colors.white,
-  ),);
+    backgroundColor: Colors.white54,
+  ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.white
+    )
+  );
 
    static final darkTheme = ThemeData(
     primaryColor: Colors.black,
@@ -24,6 +28,8 @@ class AppThemes {
       color: Colors.black,
       iconTheme: IconThemeData(color: Colors.white),
     ),
-    // Add more customizations here
+       floatingActionButtonTheme: FloatingActionButtonThemeData(
+           backgroundColor: Colors.black54
+       )
   );
 }
