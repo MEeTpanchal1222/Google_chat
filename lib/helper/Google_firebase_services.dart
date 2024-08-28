@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../controler/auth_controller.dart';
 import '../modal/user_modal.dart';
 import 'user_services.dart';
@@ -18,7 +19,40 @@ class GoogleFirebaseServices {
 
   FirebaseAuth auth = FirebaseAuth.instance;
   GoogleSignIn googleSignIn = GoogleSignIn();
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+
+  Future<void> createAccountUsingEmail(
+      String email, String password, String name, String mobile,String image) async {
+
+    print('------------------- Create function called--------------------------');
+
+
+    try {
+      print('------------------ Starting ---------------------------------');
+      log("Sign Up Email : $email\n Password : $password");
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+
+      print('------------------ Credential done ---------------------------------');
+
+      User? user = userCredential.user;
+      if (user != null) {
+        // Add user data to Firestore
+        await firestore.collection('users').doc(user.email).set({
+          'email': email,
+          'name': name,
+          'mobile': mobile,
+          'image': image,
+        });
+
+        print("User created and data added to Firestore: ${user.email}");
+      }
+    } catch (e) {
+      log("ERROR : $e");
+    }
+  }
   Future<void> createEmailAndPassword(String? email, String? pwd) async {
     try {
       await auth.createUserWithEmailAndPassword(email: email!, password: pwd!);
@@ -27,6 +61,8 @@ class GoogleFirebaseServices {
       log(e.toString());
     }
   }
+
+
 
   Future<void> compareEmailAndPwd(String? email, String? pwd) async {
     try {

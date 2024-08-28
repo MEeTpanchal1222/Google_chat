@@ -32,10 +32,10 @@ class _SignTextFieldState extends State<SignTextField> {
         padding: const EdgeInsets.only(left: 5),
         decoration: BoxDecoration(
             color: const Color(0xffF0F0F0),
-            borderRadius: BorderRadius.circular(50)),
+            borderRadius: BorderRadius.circular(10)),
         child: TextField(
           controller: widget.textEditingController,
-          obscureText: (widget.controller.isShowPwd.value) ?false:true ,
+          obscureText: (widget.controller.isShowPwd.value)?true:false,
           obscuringCharacter: '*',
           decoration: InputDecoration(
             prefixIcon: widget.prefixIcon,

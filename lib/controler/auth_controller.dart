@@ -12,10 +12,12 @@ class Auth_Controller extends GetxController{
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPwd = TextEditingController();
 
+
   // signup page text field
   TextEditingController txtUser = TextEditingController();
   TextEditingController txtCreateMail = TextEditingController();
   TextEditingController txtCreatePwd = TextEditingController();
+  TextEditingController txtPhone = TextEditingController();
 
   // show password in signIn page
   RxBool isShowPwd = false.obs;
@@ -42,7 +44,7 @@ class Auth_Controller extends GetxController{
 
   // google and firebase email id logout
 
-  void emailLayout() {
+  void emailLagout() {
     GoogleFirebaseServices.googleFirebaseServices.emailLogout();
   }
 

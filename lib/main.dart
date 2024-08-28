@@ -8,6 +8,7 @@ import 'package:google_chat/view/otp_verify/otp_verify.dart';
  import 'firebase_options.dart';
 import 'package:google_chat/themes/themes.dart';
 import 'controler/theme_controler.dart';
+import 'helper/auth_gate.dart';
 import 'view/auth/login_screen/login_screen.dart';
  import 'package:get/get.dart';
 import 'view/home_screen/home_screen.dart';
@@ -32,11 +33,11 @@ class MyApp extends StatelessWidget {
             darkTheme: AppThemes.darkTheme,
       debugShowCheckedModeBanner: false,
       title: 'Google Chat',
-            initialRoute: '/',
+            initialRoute: '/signin',
             getPages: [
               GetPage(
                 name: '/',
-                page: () =>  LoginScreen(),
+                page: () =>  AuthGate(),
               ),
               GetPage(
                 name: '/signin',

@@ -55,24 +55,54 @@ class SignInPage extends StatelessWidget {
               ),
               SignTextField(
                 hintText: 'Password',
-                prefixIcon: const Icon(Icons.password),
+                prefixIcon: const Icon(Icons.lock_open),
                 controller: auth_controller,
                 textEditingController: auth_controller.txtPwd,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      'Forgot Password',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey.shade400),
-                    )),
+                padding: const EdgeInsets.only(left: 30,right: 30),
+                child: Row(
+                  children: [
+                    Container(
+                      //color: Colors.green,
+                      child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10,right: 50),
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.toNamed("/signup");
+                              },
+                              child: Text(
+                                'New to Google Chat',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.blue.shade400),
+                              ),
+                            ),
+                          )),
+                    ),
+                    Container(
+                      //color: Colors.redAccent,
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 50),
+                            child: Text(
+                              'Forgot Password',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade400),
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
-                height: 30,
+                height: 35,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -102,7 +132,7 @@ class SignInPage extends StatelessWidget {
                             spreadRadius: 0,
                           )
                         ],
-                        color: const Color(0xff31C48D),
+                        color: const Color(0xff3182c4),
                         borderRadius: BorderRadius.circular(25)),
                     child: const Text(
                       'Sign In',
@@ -113,6 +143,7 @@ class SignInPage extends StatelessWidget {
               ),
               const SizedBox(
                 height: 35,
+                child: Center(child: Text("OR",style: TextStyle(fontWeight: FontWeight.w700),)),
               ),
               ElevatedButton.icon(
                 onPressed: () async {
@@ -143,9 +174,6 @@ class SignInPage extends StatelessWidget {
 
                 ),
               ),
-              // const GoogleAndAppleSignin(
-              //   sign: 'Sign Up',
-              // ),
             ],
           ),
         ),
