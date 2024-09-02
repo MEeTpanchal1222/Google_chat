@@ -22,6 +22,9 @@ class UserService {
             .currentUser()!
             .email)
         .snapshots();
+    // print('--------------------------------coll-----------------------------');
+    // print(collectionStream.first);
+    // print('--------------------------------coll-----------------------------');
     return collectionStream;
   }
 

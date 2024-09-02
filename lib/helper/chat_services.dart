@@ -22,4 +22,27 @@ class ChatServices {
         .orderBy("timestamp",descending: false).snapshots();
 
   }
+
+  //   Update Message
+
+  Future<void> updateMessage(String chatRoomID, String messageId, String newMessage) async {
+    await firestore
+        .collection("rooms")
+        .doc(chatRoomID)
+        .collection("message")
+        .doc(messageId)
+        .update({'message': newMessage});
+  }
+
+
+//   Delete Screen
+
+  Future<void> deleteMessage(String chatRoomID, String messageId) async {
+    await firestore
+        .collection("rooms")
+        .doc(chatRoomID)
+        .collection("message")
+        .doc(messageId)
+        .delete();
+  }
 }

@@ -3,7 +3,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import '../../../controler/auth_controller.dart';
 import '../../../helper/Google_firebase_services.dart';
+import '../../../helper/user_services.dart';
+import '../../../modal/user_modal.dart';
 import '../widgets/text_field_widget.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 
 
@@ -20,28 +24,28 @@ class SignUpPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 45,
+               SizedBox(
+                height: 45.h,
               ),
               SizedBox(
-                height: 200,
+                height: 180.h,
                 child: Image.asset(
                   'assets/Google_chat.png',
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(
-                height: 30,
+               SizedBox(
+                height: 20.h,
               ),
-              const Text(
+              Text(
                 'Sign up for free',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 26,
+                  fontSize: 26.h,
                 ),
               ),
-              const SizedBox(
-                height: 30,
+               SizedBox(
+                height: 20.h,
               ),
               SignTextField(
                 hintText: 'User name',
@@ -67,14 +71,22 @@ class SignUpPage extends StatelessWidget {
                 controller: signController,
                 textEditingController: signController.txtCreatePwd,
               ),
-              const SizedBox(
-                height: 30,
+               SizedBox(
+                height: 15.h,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                padding:  EdgeInsets.symmetric(horizontal: 40.0).h,
                 child: GestureDetector(
                   onTap: () async {
-                    GoogleFirebaseServices.googleFirebaseServices.createEmailAndPassword(signController.txtCreateMail.text, signController.txtCreatePwd.text);
+                    Map userModal={
+                      'username':signController.txtUser.text,
+                      'email':signController.txtCreateMail.text,
+                      'photoUrl':GoogleFirebaseServices.googleFirebaseServices.googleSignIn.currentUser?.photoUrl,
+                      'phone': signController.txtPhone.text
+                    };
+                    UserModal user = UserModal(userModal);
+                    UserService.userSarvice.addUser(user);
+                    //Get.toNamed("/home");
                     Fluttertoast.showToast(
                         msg: (signController.error.value.isNotEmpty ||
                             signController.pwd.value.isNotEmpty)
@@ -90,43 +102,44 @@ class SignUpPage extends StatelessWidget {
                             ? Colors.redAccent
                             : Colors.green.withOpacity(0.7),
                         textColor: Colors.white,
-                        fontSize: 16.0);
+                        fontSize: 16.0.sp);
+                    GoogleFirebaseServices.googleFirebaseServices.SignUpPage(email :signController.txtCreateMail.text,password: signController.txtCreatePwd.text,mobile:signController.txtPhone.text,name: signController.txtUser.text, image: GoogleFirebaseServices.googleFirebaseServices.auth.currentUser!.photoURL.toString());
 
 
                   },
                   child: Container(
-                    width: double.infinity,
-                    height: 50,
+                    width: 230.h,
+                    height: 40.h,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        boxShadow: const [
+                        boxShadow:  [
                           BoxShadow(
                             color: Color(0x3F000000),
-                            blurRadius: 4,
+                            blurRadius: 4.r,
                             offset: Offset(0, 4),
                             spreadRadius: 0,
                           )
                         ],
                         color: const Color(0xff3182c4),
-                        borderRadius: BorderRadius.circular(25)),
-                    child: const Text(
+                        borderRadius: BorderRadius.circular(25).r),
+                    child: Text(
                       'Sign Up',
-                      style: TextStyle(fontSize: 17, color: Colors.white),
+                      style: TextStyle(fontSize: 17.sp, color: Colors.white),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 30,
+               SizedBox(
+                height: 10.h,
               ),
                    Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                   Text(
                     'Did You have an Account?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -138,8 +151,8 @@ class SignUpPage extends StatelessWidget {
                     child: Text(
                       "Sign in",
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
+                      style:  TextStyle(
+                        fontSize: 18.sp,
                         color: Color(0xff3182c4),
                         fontWeight: FontWeight.w600,
                       ),
@@ -147,9 +160,9 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 35,
-                child: Center(child: Text("OR",style: TextStyle(fontWeight: FontWeight.w700),)),
+               SizedBox(
+                height: 25.h,
+                child: Center(child: Text("OR",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 15.h),)),
               ),
               ElevatedButton.icon(
                 onPressed: () async {
@@ -161,10 +174,10 @@ class SignUpPage extends StatelessWidget {
 
                   }
                 },
-                icon: Image.asset('assets/icons/GOOGLE.png',height: 50,),
+                icon: Image.asset('assets/icons/GOOGLE.png',height: 40.h,),
                 label: RichText(
                   text: TextSpan(
-                      style: TextStyle(color: Colors.black,fontSize:19),
+                      style: TextStyle(color: Colors.black,fontSize:19.sp),
                       children: [
                         TextSpan(text: 'Sign In with '),
                         TextSpan(text: 'Google',

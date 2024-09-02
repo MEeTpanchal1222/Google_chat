@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_chat/view/auth/signup/sign_up_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../controler/auth_controller.dart';
@@ -13,38 +14,38 @@ import 'user_services.dart';
 class GoogleFirebaseServices {
   Auth_Controller sign = Get.find();
   static GoogleFirebaseServices googleFirebaseServices =
-  GoogleFirebaseServices._();
+      GoogleFirebaseServices._();
 
   GoogleFirebaseServices._();
+
+
 
   FirebaseAuth auth = FirebaseAuth.instance;
   GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 
-  Future<void> createAccountUsingEmail(
-      String email, String password, String name, String mobile,String image) async {
+  /// Signup
 
-    print('------------------- Create function called--------------------------');
-
-
+  Future<void> SignUpPage(
+      {required String email,
+      required String password,
+      required String name,
+      required String mobile,
+      required String image}) async {
     try {
-      print('------------------ Starting ---------------------------------');
       log("Sign Up Email : $email\n Password : $password");
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-
-
-      print('------------------ Credential done ---------------------------------');
 
       User? user = userCredential.user;
       if (user != null) {
         // Add user data to Firestore
         await firestore.collection('users').doc(user.email).set({
           'email': email,
-          'name': name,
-          'mobile': mobile,
-          'image': image,
+          'username': name,
+          'phone': mobile,
+          'photoUrl': image,
         });
 
         print("User created and data added to Firestore: ${user.email}");
@@ -53,18 +54,44 @@ class GoogleFirebaseServices {
       log("ERROR : $e");
     }
   }
-  Future<void> createEmailAndPassword(String? email, String? pwd) async {
+
+
+
+
+  ///     check_email_exists
+
+  Future<bool> checkEmailExists(String email) async {
     try {
-      await auth.createUserWithEmailAndPassword(email: email!, password: pwd!);
-      Get.toNamed('/signin');
+      final signInMethods = await auth.fetchSignInMethodsForEmail(email);
+
+      // Check if any sign-in methods exist for the email
+      return signInMethods.isNotEmpty;
+    } on FirebaseAuthException catch (e) {
+      // Handle specific Firebase Auth exceptions
+      if (e.code == 'invalid-email') {
+        print('Invalid email format.');
+      } else if (e.code == 'network-request-failed') {
+        print('Network error. Please check your connection.');
+      } else {
+        print('An error occurred: ${e.message}');
+      }
+      return false;
     } catch (e) {
-      log(e.toString());
+      // Handle any other errors
+      print('Unexpected error: $e');
+      return false;
     }
   }
 
 
 
-  Future<void> compareEmailAndPwd(String? email, String? pwd) async {
+
+
+
+  ///         Signin_page
+
+  Future<void> Signin(String? email, String? pwd) async {
+    checkEmailExists(email!);
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: pwd!);
@@ -102,6 +129,15 @@ class GoogleFirebaseServices {
     }
   }
 
+
+
+
+
+
+
+
+  //Logout
+
   void emailLogout() {
     try {
       googleSignIn.signOut();
@@ -111,58 +147,90 @@ class GoogleFirebaseServices {
     }
   }
 
+
+
+
+
+
+
+
+  /// Sign with  Google
+
   Future<String> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleSignInAccount =
-      await googleSignIn.signIn();
-      GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount!.authentication;
+      try {
+        final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+        GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount!.authentication;
 
-      AuthCredential authCredential = GoogleAuthProvider.credential(
-        idToken: googleSignInAuthentication.idToken,
-        accessToken: googleSignInAuthentication.accessToken,
-      );
+        AuthCredential authCredential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken,
+        );
 
-      auth.signInWithCredential(authCredential);
-      currentUser();
+    final UserCredential userCredential = await auth.signInWithCredential(authCredential);
+    final User? user = userCredential.user;
 
-      Map userModal = {
-        'username': auth.currentUser!.displayName,
-        'email': auth.currentUser!.email,
-        'photoUrl':auth.currentUser!.photoURL,
-      };
+        Map userModal = {
+          'username': user!.displayName,
+          'email': user.email,
+          'phone': user.phoneNumber,
+          'photoUrl': user.photoURL,
+        };
 
-      UserModal user = UserModal(userModal);
-      UserService.userSarvice.addUser(user);
+        UserModal user1 = UserModal(userModal);
+        UserService.userSarvice.addUser(user1);
 
-      return "Suceess";
-    } catch (e) {
-      log(e.toString());
-      return e.toString();
+        return "Suceess";
+      } catch (e) {
+        log(e.toString());
+        return e.toString();
         //"Failed";
-    }
+      }
   }
+
+
+
+
+
+  /// to get current user
 
   User? currentUser() {
     User? user = auth.currentUser;
     if (user != null) {
+      print(
+          "========================================================================");
+      print(
+          "========================================================================");
       print(user.email);
       print(user.displayName);
       print(user.phoneNumber);
       print(user.photoURL);
+      print(
+          "========================================================================");
+      print(
+          "========================================================================");
     }
     return user;
   }
 
+
+
+
+
+
+
+
+
   Future<void> mobileUser(String number, String countryCode) async {
-    try{
+    try {
       await auth.verifyPhoneNumber(
         phoneNumber: countryCode + number,
-        verificationCompleted: (PhoneAuthCredential credential) {
-        },
+        verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseAuthException e) {
           if (e.code == 'invalid-phone-number') {
-            Fluttertoast.showToast(msg: 'The provided phone number is not valid.');
+            Fluttertoast.showToast(
+                msg: 'The provided phone number is not valid.');
           }
         },
         codeSent: (String verificationId, int? resendToken) {
@@ -171,12 +239,20 @@ class GoogleFirebaseServices {
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
-    }catch(e)
-    {
+    } catch (e) {
       log(e.toString());
     }
     // mAuth.getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);
   }
+
+
+
+
+
+
+
+
+
 
   Future<void> mobileVarifaction(String smsCode) async {
     try {

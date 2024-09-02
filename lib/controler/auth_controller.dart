@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../helper/Google_firebase_services.dart';
 
 class Auth_Controller extends GetxController{
@@ -42,6 +42,30 @@ class Auth_Controller extends GetxController{
     }
   }
 
+
+  // get user data by cloud
+  Future<Map<String, dynamic>> getUser(String email) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      DocumentSnapshot data = await firestore.collection('user').doc(email).get();
+
+      if (data.exists) {
+        return data.data() as Map<String, dynamic>;
+      } else {
+        log('Document does not exist');
+        return {};
+      }
+    } catch (e) {
+      log('Error fetching user data: $e');
+      return {};
+    }
+  }
+
+
+  getCurrentUser(){
+    return GoogleFirebaseServices.googleFirebaseServices.auth.currentUser;
+  }
+
   // google and firebase email id logout
 
   void emailLagout() {
@@ -58,110 +82,53 @@ class Auth_Controller extends GetxController{
     pwd.value = validatePassword(txtPwd.text) ?? '';
     log('${error.isEmpty && pwd.isEmpty}');
 
-    if (error.isEmpty && pwd.isEmpty) {
-      await GoogleFirebaseServices.googleFirebaseServices
-          .createEmailAndPassword(txtEmail.text, txtPwd.text);
-    }
     update();
   }
 
+
   // email formated validation
 
-  validateEmail(String? value) {
-    if (value!.isEmpty || value == '') {
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
       return 'Please enter email!';
-    } else {
-      var g = '';
-      var gmail = 'moc.liamg@';
-      var gmai = 0;
-      var sepcialChecking = 0;
-
-      g = value;
-      var len = g.length;
-      var k = 0;
-      if (len >= 11) {
-        for (var j = len - 1; j > len - 11; j--) {
-          if (g[j] != gmail[k]) {
-            gmai = 1;
-          }
-          k++;
-        }
-        if (gmai == 0) {
-          for (var j = 0; j < len - 11; j++) {
-            if ((g.codeUnitAt(j) >= 33 && g.codeUnitAt(j) <= 47) ||
-                (g.codeUnitAt(j) >= 58 && g.codeUnitAt(j) <= 64)) {
-              sepcialChecking = 1;
-            }
-          }
-          if (sepcialChecking == 0) {
-          } else {
-            return 'Invalid email format';
-          }
-        } else {
-          return 'Invalid domain name!';
-        }
-      } else {
-        return 'Please enter email!';
-      }
     }
+
+    // General email regex pattern
+    String pattern =
+        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+    RegExp regex = RegExp(pattern);
+
+    if (!regex.hasMatch(value)) {
+      return 'Invalid email format!';
+    }
+
+    // Additional specific domain check for Gmail
+    if (!value.endsWith('@gmail.com')) {
+      return 'Invalid domain name! Only Gmail is accepted.';
+    }
+
     return null;
   }
 
   // password validation
 
-  validatePassword(String? value) {
-    if (value!.isEmpty || value == '') {
-      return 'Enter strong password!';
-    } else {
-      var upparcaseChecking = 0;
-      var lowercaseChecking = 0;
-      var numberChecking = 0;
-      var sepcialCharcterChecking = 0;
-      var len = value.length;
-      if (len >= 8 && len <= 32) {
-        for (var i = 0; i < len; i++) {
-          if (value.codeUnitAt(i) >= 65 && value.codeUnitAt(i) <= 90) {
-            upparcaseChecking = 1;
-          }
-        }
-        if (upparcaseChecking == 1) {
-          for (var i = 0; i < len; i++) {
-            if (value.codeUnitAt(i) >= 97 && value.codeUnitAt(i) <= 122) {
-              lowercaseChecking = 1;
-            }
-          }
-          if (lowercaseChecking == 1) {
-            for (var i = 0; i < len; i++) {
-              if (value.codeUnitAt(i) >= 48 && value.codeUnitAt(i) <= 57) {
-                numberChecking = 1;
-              }
-            }
-            if (numberChecking == 1) {
-              for (var i = 0; i < len; i++) {
-                if ((value.codeUnitAt(i) >= 33 && value.codeUnitAt(i) <= 47) ||
-                    (value.codeUnitAt(i) >= 58 && value.codeUnitAt(i) <= 64)) {
-                  sepcialCharcterChecking = 1;
-                }
-              }
-              if (sepcialCharcterChecking == 1) {
-              } else {
-                return 'Enter sepcial charcter password!';
-              }
-            } else {
-              return 'Enter number password!';
-            }
-          } else {
-            return 'Enter lower case password!';
-          }
-        } else {
-          return 'Enter upper case password!';
-        }
-      } else {
-        return 'Enter strong password!';
-      }
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Enter a strong password!';
     }
+
+    // Regular expression to check for a strong password
+    String pattern =
+        r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$&*~]).{8,32}$';
+    RegExp regex = RegExp(pattern);
+
+    if (!regex.hasMatch(value)) {
+      return 'Password must be 8-32 characters long, include uppercase, lowercase, number, and special character.';
+    }
+
     return null;
   }
+
 
 
 

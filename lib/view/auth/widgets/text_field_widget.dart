@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../controler/auth_controller.dart';
 
 class SignTextField extends StatefulWidget {
@@ -25,14 +27,14 @@ class _SignTextFieldState extends State<SignTextField> {
   Widget build(BuildContext context) {
     final Auth_Controller auth_controller = Get.put(Auth_Controller());
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 10),
+      padding:  EdgeInsets.symmetric(horizontal: 30.0.h, vertical: 5.h),
       child: Container(
-        height: 50,
-        width: double.infinity,
-        padding: const EdgeInsets.only(left: 5),
+        height: 40.h,
+        width: 300.h,
+        padding:  EdgeInsets.only(left: 5.h),
         decoration: BoxDecoration(
             color: const Color(0xffF0F0F0),
-            borderRadius: BorderRadius.circular(10)),
+            borderRadius: BorderRadius.circular(10).r),
         child: TextField(
           controller: widget.textEditingController,
           obscureText: (widget.controller.isShowPwd.value)?true:false,
@@ -56,7 +58,7 @@ class _SignTextFieldState extends State<SignTextField> {
             hintText: widget.hintText,
             hintStyle: TextStyle(color: Colors.grey.shade400),
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.only(top: 12),
+            contentPadding: const EdgeInsets.only(top: 12).h,
           ),
         ),
       ),
