@@ -18,9 +18,9 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: 240.h,
+      width: 245.h,
       child: Container(
-        color: Colors.white, // Set the background color to white
+        color: Theme.of(context).colorScheme.surface,
         child: Column(
           children: [
             Divider(
@@ -126,7 +126,6 @@ class CustomDrawer extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black,
                   ),
                 ),
                 leading: Icon(
@@ -175,7 +174,6 @@ class CustomDrawer extends StatelessWidget {
         style: TextStyle(
           fontSize: 16.sp,
           fontWeight: FontWeight.w500,
-          color: Colors.black87,
         ),
       ),
       onTap: onTap,

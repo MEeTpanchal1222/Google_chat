@@ -40,8 +40,8 @@ class Home_screen extends StatelessWidget {
         padding:  EdgeInsets.all(16.0.h),
         child: Material(
           elevation: 10.0.h,
+          color: Theme.of(context).colorScheme.inverseSurface,
           borderRadius: BorderRadius.circular(30.0.r),
-          color: Theme.of(context).secondaryHeaderColor,
           child: Container(
             height: 50.h,
             child: Row(
@@ -56,27 +56,6 @@ class Home_screen extends StatelessWidget {
           ),
         ),
       ),
-      // BottomNavigationBar(
-      //   selectedItemColor: Colors.red,
-      //   unselectedItemColor: Colors.grey.shade600,
-      //   selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
-      //   unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
-      //   type: BottomNavigationBarType.fixed,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.message),
-      //       label: "Chats",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.group_work),
-      //       label: "Channels",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.account_box),
-      //       label: "Profile",
-      //     ),
-      //   ],
-      // ),
 
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -96,14 +75,14 @@ class Home_screen extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0).h,
-            child: FloatingActionButton(
-              backgroundColor: (themeController.themeMode.value == ThemeMode.dark )?Color(0xff06547e):Colors.white,
-              onPressed:
-              () {
+            child:FloatingActionButton(
+                  onPressed:
+                      () {
 
-              },
-              child:  Icon(Icons.add_comment_rounded,color: Colors.blue.shade400,size: 35,),
-            ),
+                  },
+                  child:  Icon(Icons.add_comment_rounded,color: Colors.blue.shade400,size: 35,),
+                ),
+
           ),
         ],
       ),
@@ -137,7 +116,7 @@ class Home_screen extends StatelessWidget {
                     child: ListTile(
                         onTap: () {
                           chatController.changeReceiverEmail(userList[index].email!,userList[index].photoUrl!);
-                          print(userList[index].photoUrl!);
+                          //print(userList[index].photoUrl!);
                           Get.toNamed('/chat');
                         },
                         leading: CircleAvatar(
@@ -145,7 +124,9 @@ class Home_screen extends StatelessWidget {
                             userList[index].photoUrl!,
                           ),
                         ),
-                        title: Text(userList[index].email!)),
+                        title: Text(userList[index].email!),
+                      subtitle: Text(userList[index].phone!),
+                    ),
                   ),
                 );
               },
@@ -166,7 +147,7 @@ Widget _buildNavItem(IconData icon, int index,BuildContext context) {
   return IconButton(
     icon: Icon(
       icon,
-      color: _selectedIndex == index ? Colors.blueAccent : Theme.of(context).colorScheme.surface,
+      color: _selectedIndex == index ? Theme.of(context).colorScheme.inversePrimary : Theme.of(context).colorScheme.tertiary,
       size: 25.h,
     ),
     onPressed: () => _onItemTapped(index),

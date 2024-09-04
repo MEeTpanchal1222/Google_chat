@@ -33,7 +33,7 @@ class _SignTextFieldState extends State<SignTextField> {
         width: 300.h,
         padding:  EdgeInsets.only(left: 5.h),
         decoration: BoxDecoration(
-            color: const Color(0xffF0F0F0),
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(10).r),
         child: TextField(
           controller: widget.textEditingController,

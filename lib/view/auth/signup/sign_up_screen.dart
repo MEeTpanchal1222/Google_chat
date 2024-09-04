@@ -78,15 +78,6 @@ class SignUpPage extends StatelessWidget {
                 padding:  EdgeInsets.symmetric(horizontal: 40.0).h,
                 child: GestureDetector(
                   onTap: () async {
-                    Map userModal={
-                      'username':signController.txtUser.text,
-                      'email':signController.txtCreateMail.text,
-                      'photoUrl':GoogleFirebaseServices.googleFirebaseServices.googleSignIn.currentUser?.photoUrl,
-                      'phone': signController.txtPhone.text
-                    };
-                    UserModal user = UserModal(userModal);
-                    UserService.userSarvice.addUser(user);
-                    //Get.toNamed("/home");
                     Fluttertoast.showToast(
                         msg: (signController.error.value.isNotEmpty ||
                             signController.pwd.value.isNotEmpty)
@@ -103,7 +94,8 @@ class SignUpPage extends StatelessWidget {
                             : Colors.green.withOpacity(0.7),
                         textColor: Colors.white,
                         fontSize: 16.0.sp);
-                    GoogleFirebaseServices.googleFirebaseServices.SignUpPage(email :signController.txtCreateMail.text,password: signController.txtCreatePwd.text,mobile:signController.txtPhone.text,name: signController.txtUser.text, image: GoogleFirebaseServices.googleFirebaseServices.auth.currentUser!.photoURL.toString());
+
+                    GoogleFirebaseServices.googleFirebaseServices.SignUpPage(email :signController.txtCreateMail.text,password: signController.txtCreatePwd.text,mobile:signController.txtPhone.text,name: signController.txtUser.text,);
 
 
                   },

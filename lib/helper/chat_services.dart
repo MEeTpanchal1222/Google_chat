@@ -1,9 +1,14 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:google_chat/controler/auth_controller.dart';
+import 'package:google_chat/helper/Google_firebase_services.dart';
+import '../controler/chat_controller.dart';
 
 class ChatServices {
   static ChatServices chatServices =  ChatServices._();
   ChatServices._();
+  Auth_Controller controller = Get.find();
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   Future<void> Insertchat(Map<String,dynamic>chat, String sender ,String receiver)async {
@@ -23,26 +28,37 @@ class ChatServices {
 
   }
 
-  //   Update Message
+  void updateChat(String message, String chatId,String sender,
+      String receiver) {
+    // 1. chat id field
+    // 2. docId access
 
-  Future<void> updateMessage(String chatRoomID, String messageId, String newMessage) async {
-    await firestore
-        .collection("rooms")
-        .doc(chatRoomID)
-        .collection("message")
-        .doc(messageId)
-        .update({'message': newMessage});
+    List doc = [sender, receiver];
+    doc.sort();
+    String docId = doc.join('_');
+    FirebaseFirestore.instance
+        .collection('chatroom')
+        .doc(docId)
+        .collection('chat')
+        .doc(chatId)
+        .update({
+      'message': message,
+    });
   }
 
+  void deleteChat({required String chatId,required String sender,
+      required String receiver}) {
+    // 1. chat id field
+    // 2. docId access
 
-//   Delete Screen
-
-  Future<void> deleteMessage(String chatRoomID, String messageId) async {
-    await firestore
-        .collection("rooms")
-        .doc(chatRoomID)
-        .collection("message")
-        .doc(messageId)
+    List doc = [sender, receiver];
+    doc.sort();
+    String docId = doc.join('_');
+    FirebaseFirestore.instance
+        .collection('chatroom')
+        .doc(docId)
+        .collection('chat')
+        .doc(chatId)
         .delete();
   }
 }

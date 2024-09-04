@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_chat/helper/chat_services.dart';
 
 class ChatController extends GetxController{
   RxString chatMessage = ''.obs;
@@ -25,4 +26,17 @@ class ChatController extends GetxController{
     receiverEmail.value=email;
     receiverImageUrl.value =photoUrl;
   }
+
+  void Delate({required String chatId,required String sender,
+      required String receiver})
+  {
+    ChatServices.chatServices.deleteChat(chatId: chatId, sender: sender,receiver: receiver);
+  }
+
+  void edit({required String message, required String chatId,required String sender,
+      required String receiver})
+  {
+    ChatServices.chatServices.updateChat(message, chatId, sender, receiver);
+  }
+
 }

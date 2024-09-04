@@ -31,24 +31,34 @@ class GoogleFirebaseServices {
       {required String email,
       required String password,
       required String name,
-      required String mobile,
-      required String image}) async {
+      required String mobile}) async {
     try {
       log("Sign Up Email : $email\n Password : $password");
-      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
 
       User? user = userCredential.user;
+      userCredential.credential;
+      Map userModal = {
+        'username': user!.displayName,
+        'email': user.email,
+        'phone': user.phoneNumber,
+        'photoUrl': user.photoURL,
+      };
+
+      UserModal user1 = UserModal(userModal);
+      UserService.userSarvice.addUser(user1);
       if (user != null) {
         // Add user data to Firestore
-        await firestore.collection('users').doc(user.email).set({
+        await firestore.collection('user').doc(user.email).set({
           'email': email,
           'username': name,
           'phone': mobile,
-          'photoUrl': image,
+          'photoUrl': user.photoURL,
         });
 
         print("User created and data added to Firestore: ${user.email}");
+        Get.toNamed("signin");
       }
     } catch (e) {
       log("ERROR : $e");

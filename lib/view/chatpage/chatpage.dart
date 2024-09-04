@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,10 +13,12 @@ class ChatPage extends StatelessWidget {
   ChatPage({super.key});
   Auth_Controller auth_controller = Get.put(Auth_Controller());
   ChatController controller = Get.put(ChatController());
-  void _showMessageOptions(BuildContext context, String messageId, String currentMessage) {
+  void _showMessageOptions(BuildContext context,
+      {required String messageId, required String currentMessage}) {
     showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(100, 100, 50, 50), // Adjust position as needed
+      position:
+          RelativeRect.fromLTRB(100, 100, 50, 50), // Adjust position as needed
       items: [
         PopupMenuItem(
           value: 'edit',
@@ -27,7 +27,10 @@ class ChatPage extends StatelessWidget {
             title: const Text('Edit'),
             onTap: () {
               Navigator.pop(context);
-              _editMessage(messageId, currentMessage);
+              _editMessage(
+                  currentMessage: currentMessage,
+                  messageId: messageId,
+                  context: context);
             },
           ),
         ),
@@ -46,8 +49,12 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  void _editMessage(String messageId, String currentMessage,BuildContext context) {
-    TextEditingController _editController = TextEditingController(text: currentMessage);
+  void _editMessage(
+      {required String messageId,
+      required String currentMessage,
+      required BuildContext context}) {
+    TextEditingController _editController =
+        TextEditingController(text: currentMessage);
     showDialog(
       context: context,
       builder: (context) {
@@ -66,11 +73,11 @@ class ChatPage extends StatelessWidget {
               onPressed: () async {
                 if (_editController.text.isNotEmpty) {
                   String senderID = auth_controller.getCurrentUser()!.email!;
-                  List<String> ids = [widget.receiverEmail, senderID];
-                  ids.sort();
-                  String chatRoomID = ids.join('_');
-
-                  await _chatService.updateMessage(chatRoomID, messageId, _editController.text);
+                  controller.edit(
+                      chatId: messageId,
+                      message: _editController.text,
+                      receiver: controller.receiverEmail.value,
+                      sender: senderID);
                   Navigator.pop(context);
                 }
               },
@@ -83,44 +90,11 @@ class ChatPage extends StatelessWidget {
   }
 
   void _deleteMessage(String messageId) async {
-    String senderID = _authService.getCurrentUser()!.email!;
-    List<String> ids = [widget.receiverEmail, senderID];
-    ids.sort();
-    String chatRoomID = ids.join('_');
-
-    await _chatService.deleteMessage(chatRoomID, messageId);
+    String senderID = auth_controller.getCurrentUser()!.email!;
+    String recvierId = controller.receiverEmail.value;
+    controller.Delate(sender: senderID, chatId: messageId, receiver: recvierId);
   }
 
-  Widget _buildUserInput() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        children: [
-          Expanded(
-            child: MyTextField(
-              hintText: "Type a message",
-              obscureText: false,
-              controller: _messageController,
-            ),
-          ),
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.green,
-              shape: BoxShape.circle,
-            ),
-            margin: const EdgeInsets.only(right: 25),
-            child: IconButton(
-              onPressed: sendMessage,
-              icon: const Icon(
-                Icons.arrow_upward,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +106,7 @@ class ChatPage extends StatelessWidget {
           children: [
             const BackButton(),
             Obx(
-                  () => CircleAvatar(
+              () => CircleAvatar(
                 radius: 25.r,
                 backgroundImage: NetworkImage(
                   controller.receiverImageUrl.value,
@@ -142,13 +116,13 @@ class ChatPage extends StatelessWidget {
           ],
         ),
         title: Obx(
-              () => Text(
+          () => Text(
             controller.receiverEmail.value,
             overflow: TextOverflow.ellipsis,
-            style:  TextStyle(fontWeight: FontWeight.w600, fontSize: 18.sp),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.sp),
           ),
         ),
-        actions:  [
+        actions: [
           Padding(
             padding: EdgeInsets.only(left: 16.0.h, right: 8.h),
             child: Icon(Icons.add_call),
@@ -165,8 +139,9 @@ class ChatPage extends StatelessWidget {
             child: StreamBuilder(
               stream: ChatServices.chatServices.getchat(
                   GoogleFirebaseServices.googleFirebaseServices
-                      .currentUser()!
-                      .email??auth_controller.phone.value,
+                          .currentUser()!
+                          .email ??
+                      auth_controller.phone.value,
                   controller.receiverEmail.value),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -182,92 +157,106 @@ class ChatPage extends StatelessWidget {
 
                 var queryData = snapshot.data!.docs;
                 List chats = queryData.map((e) => e.data()).toList();
+                List chatsId = queryData.map((e) => e.id).toList();
                 List<ChatModal> chatList =
-                chats.map((e) => ChatModal(e)).toList();
+                    chats.map((e) => ChatModal(e)).toList();
                 return ListView.builder(
                   itemCount: chatList.length,
                   itemBuilder: (context, index) => Padding(
-                    padding:  EdgeInsets.all(8.0.h),
+                    padding: EdgeInsets.all(8.0.h),
                     child: Align(
                         alignment: GoogleFirebaseServices.googleFirebaseServices
-                            .currentUser()!
-                            .email ==
-                            chatList[index].sender
+                                    .currentUser()!
+                                    .email ==
+                                chatList[index].sender
                             ? Alignment.centerRight
                             : Alignment.centerLeft,
-                        child: Card(
-                            child: Padding(
-                          padding:  EdgeInsets.all(8.0.h),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(chatList[index].message!),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text("${chatList[index].timestamp!.toDate().hour.toString()}:${chatList[index].timestamp!.toDate().second.toString()}",style: TextStyle(color: Colors.grey,fontSize: 12),),
-                                ],
-                              )
-                            ],
-                          ),
-                        ))),
+                        child: GestureDetector(
+                          onLongPress: () {
+                            if (chatList[index].sender ==
+                                GoogleFirebaseServices.googleFirebaseServices
+                                    .currentUser()!
+                                    .email) {
+                              _showMessageOptions(context,
+                                  messageId: chatsId[index],
+                                  currentMessage: chatList[index].message!);
+                            }
+                          },
+                          child: Card(
+                              child: Padding(
+                            padding: EdgeInsets.all(8.0.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(chatList[index].message!),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "${chatList[index].timestamp!.toDate().hour.toString()}:${chatList[index].timestamp!.toDate().second.toString()}",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )),
+                        )),
                   ),
                 );
               },
             ),
           ),
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 8.0.h, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 8.0.h, vertical: 8.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 50.h,
-                  width: 220.h,
+                  height: 45.h,
+                  width: 240.h,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(10.r),
-                    border:Border(top: BorderSide(color:Theme.of(context).primaryColor ))
-                    //Theme.of(context).primaryColor
-                  ),
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(10.r),
+                      ),
                   child: Obx(
-                        () => TextField(
+                    () => TextField(
                       controller: controller.txtChats,
                       onChanged: (value) => controller.changeMessage(value),
                       decoration: InputDecoration(
                         hintText: 'Message',
-                        hintStyle:  TextStyle(fontSize: 20.sp),
+                        hintStyle: TextStyle(fontSize: 20.sp),
                         border: InputBorder.none,
-                        prefixIcon: const Icon(Icons.emoji_emotions_outlined),
+                        prefixIcon:  Icon(Icons.emoji_emotions_outlined),
                         suffixIcon: controller.chatMessage.value.isEmpty
-                            ?  Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.attach_file),
-                            SizedBox(
-                              width: 15.h,
-                            ),
-                            Icon(CupertinoIcons
-                                .money_dollar_circle_fill),
-                            SizedBox(
-                              width: 15.h,
-                            ),
-                            Icon(Icons.photo_camera),
-                            SizedBox(
-                              width: 15.h,
-                            ),
-                          ],
-                        )
-                            :  Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.attach_file),
-                            SizedBox(
-                              width: 10.h,
-                            ),
-                          ],
-                        ),
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.attach_file),
+                                  SizedBox(
+                                    width: 15.h,
+                                  ),
+                                  Icon(CupertinoIcons.money_dollar_circle_fill),
+                                  SizedBox(
+                                    width: 15.h,
+                                  ),
+                                  Icon(Icons.photo_camera),
+                                  SizedBox(
+                                    width: 15.h,
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.attach_file),
+                                  SizedBox(
+                                    width: 10.h,
+                                  ),
+                                ],
+                              ),
                       ),
                     ),
                   ),
@@ -275,16 +264,17 @@ class ChatPage extends StatelessWidget {
                 SizedBox(
                   height: 60.h,
                   child: Padding(
-                    padding:  EdgeInsets.only(bottom: 8.0.h, right: 4.h),
+                    padding: EdgeInsets.only(bottom: 8.0.h, right: 4.h),
                     child: Obx(
-                          () => FloatingActionButton(
-                        shape: const CircleBorder(),
+                      () => FloatingActionButton(
+                        shape:  CircleBorder(),
                         onPressed: () {
                           Map<String, dynamic> chat = {
                             'sender': GoogleFirebaseServices
-                                .googleFirebaseServices
-                                .currentUser()!
-                                .email??auth_controller.phone.value,
+                                    .googleFirebaseServices
+                                    .currentUser()!
+                                    .email ??
+                                auth_controller.phone.value,
                             'receiver': controller.receiverEmail.value,
                             'message': controller.txtChats.text,
                             'timestamp': DateTime.now()
@@ -292,14 +282,15 @@ class ChatPage extends StatelessWidget {
                           ChatServices.chatServices.Insertchat(
                               chat,
                               GoogleFirebaseServices.googleFirebaseServices
-                                  .currentUser()!
-                                  .email??auth_controller.phone.value,
+                                      .currentUser()!
+                                      .email ??
+                                  auth_controller.phone.value,
                               controller.receiverEmail.value);
                           controller.txtChats.clear();
                         },
                         child: controller.chatMessage.value.isEmpty
-                            ? const Icon(Icons.mic)
-                            : const Icon(Icons.send),
+                            ?  Icon(Icons.mic,color: Theme.of(context).colorScheme.primary,)
+                            :  Icon(Icons.send,color: Theme.of(context).colorScheme.primary,),
                       ),
                     ),
                   ),
@@ -311,5 +302,4 @@ class ChatPage extends StatelessWidget {
       ),
     );
   }
-
 }
