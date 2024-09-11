@@ -4,8 +4,8 @@ import 'package:google_chat/helper/chat_services.dart';
 
 class ChatController extends GetxController{
   RxString chatMessage = ''.obs;
+  ScrollController scrollController = ScrollController();
   TextEditingController txtChats = TextEditingController();
-
   void changeMessage(String value)
   {
     chatMessage.value = value;
@@ -20,11 +20,13 @@ class ChatController extends GetxController{
 
   RxString receiverEmail =''.obs;
   RxString receiverImageUrl =''.obs;
+  RxString receivertoken =''.obs;
 
-  void changeReceiverEmail(String email,String photoUrl)
+  void changeReceiverEmail(String email,String photoUrl,String token)
   {
     receiverEmail.value=email;
     receiverImageUrl.value =photoUrl;
+    receivertoken.value = token;
   }
 
   void Delate({required String chatId,required String sender,
@@ -37,6 +39,24 @@ class ChatController extends GetxController{
       required String receiver})
   {
     ChatServices.chatServices.updateChat(message, chatId, sender, receiver);
+  }
+
+  void scrollToBottom() {
+    Future.delayed(Duration(milliseconds: 300), () {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
 }

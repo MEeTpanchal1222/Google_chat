@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatModal {
   String? sender, receiver, message;
+  bool read;
   Timestamp? timestamp;
 
   ChatModal._(
       {required this.sender,
         required this.receiver,
         required this.message,
+        required this.read,
         required this.timestamp});
 
   factory ChatModal(Map json) {
@@ -15,6 +17,7 @@ class ChatModal {
         sender: json['sender'],
         receiver: json['receiver'],
         message: json['message'],
+        read: json['read']??false,
         timestamp: json['timestamp']);
   }
 
@@ -23,7 +26,8 @@ class ChatModal {
       'sender': chat.sender,
       'receiver': chat.receiver,
       'message': chat.message,
-      'timestamp': chat.timestamp
+      'timestamp': chat.timestamp,
+      'read':chat.read,
     };
   }
 }

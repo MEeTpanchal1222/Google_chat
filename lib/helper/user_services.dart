@@ -4,7 +4,6 @@ import 'Google_firebase_services.dart';
 
 class UserService {
   static UserService userSarvice = UserService._();
-
   UserService._();
 
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;

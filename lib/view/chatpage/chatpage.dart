@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_chat/helper/Api_scrvices.dart';
 import '../../controler/auth_controller.dart';
 import '../../controler/chat_controller.dart';
 import '../../helper/Google_firebase_services.dart';
@@ -13,8 +14,9 @@ class ChatPage extends StatelessWidget {
   ChatPage({super.key});
   Auth_Controller auth_controller = Get.put(Auth_Controller());
   ChatController controller = Get.put(ChatController());
-  void _showMessageOptions(BuildContext context,
-      {required String messageId, required String currentMessage}) {
+
+  void _showMessageOptions(BuildContext context, {required String messageId, required String currentMessage})
+  {
     showMenu(
       context: context,
       position:
@@ -48,6 +50,7 @@ class ChatPage extends StatelessWidget {
       ],
     );
   }
+
 
   void _editMessage(
       {required String messageId,
@@ -89,11 +92,16 @@ class ChatPage extends StatelessWidget {
     );
   }
 
+
+
   void _deleteMessage(String messageId) async {
     String senderID = auth_controller.getCurrentUser()!.email!;
     String recvierId = controller.receiverEmail.value;
     controller.Delate(sender: senderID, chatId: messageId, receiver: recvierId);
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +169,7 @@ class ChatPage extends StatelessWidget {
                 List<ChatModal> chatList =
                     chats.map((e) => ChatModal(e)).toList();
                 return ListView.builder(
+                  controller: controller.scrollController,
                   itemCount: chatList.length,
                   itemBuilder: (context, index) => Padding(
                     padding: EdgeInsets.all(8.0.h),
@@ -268,6 +277,7 @@ class ChatPage extends StatelessWidget {
                     child: Obx(
                       () => FloatingActionButton(
                         shape:  CircleBorder(),
+                        heroTag: 'chat',
                         onPressed: () {
                           Map<String, dynamic> chat = {
                             'sender': GoogleFirebaseServices
@@ -277,7 +287,8 @@ class ChatPage extends StatelessWidget {
                                 auth_controller.phone.value,
                             'receiver': controller.receiverEmail.value,
                             'message': controller.txtChats.text,
-                            'timestamp': DateTime.now()
+                            'timestamp': DateTime.now(),
+                            'read':null,
                           };
                           ChatServices.chatServices.Insertchat(
                               chat,
@@ -286,7 +297,9 @@ class ChatPage extends StatelessWidget {
                                       .email ??
                                   auth_controller.phone.value,
                               controller.receiverEmail.value);
+                          ApiService.apiService.sendMessage(token: controller.receivertoken.toString(),body:controller.txtChats.text,title:controller.receiverEmail.value);
                           controller.txtChats.clear();
+                          controller.scrollToBottom();
                         },
                         child: controller.chatMessage.value.isEmpty
                             ?  Icon(Icons.mic,color: Theme.of(context).colorScheme.primary,)

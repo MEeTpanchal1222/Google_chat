@@ -63,11 +63,13 @@ class Home_screen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8).h,
             child: FloatingActionButton(
+              heroTag: 'gemini',
               shape: CircleBorder(),
               onPressed:
                   () {
                        print("------------------------------------------");
                       print(GoogleFirebaseServices.googleFirebaseServices.auth.currentUser?.email);
+                      Get.toNamed("/Aichat");
 
               },
               child: Image.asset('assets/icons/google-gemini-icon.png',height: 30,),
@@ -76,6 +78,7 @@ class Home_screen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0).h,
             child:FloatingActionButton(
+              heroTag: 'chat',
                   onPressed:
                       () {
 
@@ -115,7 +118,7 @@ class Home_screen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0).h,
                     child: ListTile(
                         onTap: () {
-                          chatController.changeReceiverEmail(userList[index].email!,userList[index].photoUrl!);
+                          chatController.changeReceiverEmail(userList[index].email!,userList[index].photoUrl!,userList[index].token!);
                           //print(userList[index].photoUrl!);
                           Get.toNamed('/chat');
                         },

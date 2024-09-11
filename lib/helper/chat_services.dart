@@ -9,7 +9,7 @@ class ChatServices {
   static ChatServices chatServices =  ChatServices._();
   ChatServices._();
   Auth_Controller controller = Get.find();
-
+  ChatController controller1 = Get.put(ChatController());
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   Future<void> Insertchat(Map<String,dynamic>chat, String sender ,String receiver)async {
     List doc  =[ sender, receiver];
@@ -25,7 +25,6 @@ class ChatServices {
     return firestore.
     collection("chatroom").doc(docId).collection("chat")
         .orderBy("timestamp",descending: false).snapshots();
-
   }
 
   void updateChat(String message, String chatId,String sender,

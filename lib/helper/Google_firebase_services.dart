@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_chat/helper/Firebase_Messaging_services.dart';
 import 'package:google_chat/view/auth/signup/sign_up_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,7 +32,8 @@ class GoogleFirebaseServices {
       {required String email,
       required String password,
       required String name,
-      required String mobile}) async {
+      required String mobile,
+      required String token}) async {
     try {
       log("Sign Up Email : $email\n Password : $password");
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
@@ -44,6 +46,7 @@ class GoogleFirebaseServices {
         'email': user.email,
         'phone': user.phoneNumber,
         'photoUrl': user.photoURL,
+        'token':token,
       };
 
       UserModal user1 = UserModal(userModal);
@@ -55,6 +58,7 @@ class GoogleFirebaseServices {
           'username': name,
           'phone': mobile,
           'photoUrl': user.photoURL,
+          'token':token,
         });
 
         print("User created and data added to Firestore: ${user.email}");
@@ -64,6 +68,20 @@ class GoogleFirebaseServices {
       log("ERROR : $e");
     }
   }
+
+
+
+
+
+  // UPDATE USER TOKEN;
+  Future<void> updateUserToken() async {
+    String? token = await FirebaseMessagingServices.firebaseMessagingServices
+        .generateDeviceToken();
+    User? user = GoogleFirebaseServices.googleFirebaseServices.currentUser();
+    firestore.collection('user').doc(user!.email).update({'token': token});
+  }
+
+
 
 
 
@@ -105,6 +123,7 @@ class GoogleFirebaseServices {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: pwd!);
+      updateUserToken();
       Get.toNamed('/home');
     } on FirebaseAuthException catch (e) {
       log(e.code);
@@ -180,14 +199,15 @@ class GoogleFirebaseServices {
 
     final UserCredential userCredential = await auth.signInWithCredential(authCredential);
     final User? user = userCredential.user;
-
+        String? token = await FirebaseMessagingServices.firebaseMessagingServices.generateDeviceToken();
         Map userModal = {
           'username': user!.displayName,
           'email': user.email,
           'phone': user.phoneNumber,
           'photoUrl': user.photoURL,
+          'token': token
         };
-
+        print('\n \n   ${token} \n\n ');
         UserModal user1 = UserModal(userModal);
         UserService.userSarvice.addUser(user1);
 

@@ -1,5 +1,6 @@
  import 'package:flutter/material.dart';
  import 'package:firebase_core/firebase_core.dart';
+import 'package:google_chat/view/Ai_chat_screen/Ai_chat_screen.dart';
 import 'package:google_chat/view/auth/signin/sign_in_screen.dart';
 import 'package:google_chat/view/auth/signup/sign_up_screen.dart';
 import 'package:google_chat/view/chatpage/chatpage.dart';
@@ -9,14 +10,26 @@ import 'package:google_chat/view/otp_verify/otp_verify.dart';
  import 'package:flutter_screenutil/flutter_screenutil.dart';
  import 'package:google_chat/themes/themes.dart';
 import 'controler/theme_controler.dart';
+ import 'package:flutter_gemini/flutter_gemini.dart';
+import 'helper/Api_scrvices.dart';
+import 'helper/Firebase_Messaging_services.dart';
+import 'helper/Notification_services.dart';
 import 'helper/auth_gate.dart';
 import 'view/auth/login_screen/login_screen.dart';
  import 'package:get/get.dart';
 import 'view/home_screen/home_screen.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  initializeFirebase();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Gemini.init(apiKey: 'AIzaSyAwWJE4--FNbdaZrjynNKjqvrZy7p4kaMk');
+  NotificationServices.notificationServices.initNotification();
+  await FirebaseMessagingServices.firebaseMessagingServices.requestPermission();
+  await FirebaseMessagingServices.firebaseMessagingServices.generateDeviceToken();
+  //ApiService.apiService.getServerToken();
+  FirebaseMessagingServices.firebaseMessagingServices.onMessageListener();
   runApp(const MyApp());
 }
 
@@ -40,8 +53,8 @@ class MyApp extends StatelessWidget {
                 GetPage(
                   name: '/',
                   page: () =>
-                      //AuthGate(),
-                      LoginScreen()
+                      AuthGate(),
+                      //LoginScreen()
 
                 ),
                 GetPage(
@@ -72,6 +85,8 @@ class MyApp extends StatelessWidget {
                   name: '/chat',
                   page: () =>  ChatPage(),
                 ),
+                GetPage(name: "/Aichat",
+                    page: () => AiChatScreen())
               ],
       ),
       ),
@@ -79,8 +94,3 @@ class MyApp extends StatelessWidget {
   } 
 }
 
- initializeFirebase() async {
-   await Firebase.initializeApp(
-     options: DefaultFirebaseOptions.currentPlatform,
-   );
- }

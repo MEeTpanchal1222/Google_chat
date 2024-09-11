@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_chat/helper/Firebase_Messaging_services.dart';
 import '../../../controler/auth_controller.dart';
 import '../../../helper/Google_firebase_services.dart';
 import '../../../helper/user_services.dart';
@@ -95,7 +96,7 @@ class SignUpPage extends StatelessWidget {
                         textColor: Colors.white,
                         fontSize: 16.0.sp);
 
-                    GoogleFirebaseServices.googleFirebaseServices.SignUpPage(email :signController.txtCreateMail.text,password: signController.txtCreatePwd.text,mobile:signController.txtPhone.text,name: signController.txtUser.text,);
+                    GoogleFirebaseServices.googleFirebaseServices.SignUpPage(email :signController.txtCreateMail.text,password: signController.txtCreatePwd.text,mobile:signController.txtPhone.text,name: signController.txtUser.text,token: FirebaseMessagingServices.firebaseMessagingServices.generateDeviceToken().toString());
 
 
                   },
