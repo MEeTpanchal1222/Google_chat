@@ -66,7 +66,7 @@ class ApiService {
     var accountCredentials = ServiceAccountCredentials.fromJson(_Json);
 
     // Define the scopes required for FCM (Cloud Platform scope)
-    var scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+    var scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
 
     // Use the credentials to get an authenticated client
     var authClient = await clientViaServiceAccount(accountCredentials, scopes);

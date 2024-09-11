@@ -1,4 +1,5 @@
- import 'package:flutter/material.dart';
+ import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
  import 'package:firebase_core/firebase_core.dart';
 import 'package:google_chat/view/Ai_chat_screen/Ai_chat_screen.dart';
 import 'package:google_chat/view/auth/signin/sign_in_screen.dart';
@@ -17,8 +18,17 @@ import 'helper/Notification_services.dart';
 import 'helper/auth_gate.dart';
 import 'view/auth/login_screen/login_screen.dart';
  import 'package:get/get.dart';
+ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'view/home_screen/home_screen.dart';
 
+ @pragma('vm:entry-point')
+ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+   if (kDebugMode) {
+     print("Handling a background message: ${message.notification!.title}");
+   }
+   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+   // Get.to(const UserPage());
+ }
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
