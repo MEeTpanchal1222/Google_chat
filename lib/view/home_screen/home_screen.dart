@@ -63,7 +63,7 @@ class Home_screen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8).h,
             child: FloatingActionButton(
-              heroTag: 'gemini',
+              heroTag: 'Gemini',
               shape: CircleBorder(),
               onPressed:
                   () {
@@ -122,9 +122,12 @@ class Home_screen extends StatelessWidget {
                           //print(userList[index].photoUrl!);
                           Get.toNamed('/chat');
                         },
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            userList[index].photoUrl!,
+                        leading: Hero(
+                          tag: "user${index}",
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              userList[index].photoUrl!,
+                            ),
                           ),
                         ),
                         title: Text(userList[index].email!),

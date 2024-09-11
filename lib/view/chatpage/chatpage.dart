@@ -114,10 +114,13 @@ class ChatPage extends StatelessWidget {
           children: [
             const BackButton(),
             Obx(
-              () => CircleAvatar(
-                radius: 25.r,
-                backgroundImage: NetworkImage(
-                  controller.receiverImageUrl.value,
+              () => Hero(
+                tag: "user",
+                child: CircleAvatar(
+                  radius: 25.r,
+                  backgroundImage: NetworkImage(
+                    controller.receiverImageUrl.value,
+                  ),
                 ),
               ),
             ),

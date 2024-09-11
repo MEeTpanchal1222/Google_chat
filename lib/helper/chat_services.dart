@@ -42,6 +42,7 @@ class ChatServices {
         .doc(chatId)
         .update({
       'message': message,
+
     });
   }
 
