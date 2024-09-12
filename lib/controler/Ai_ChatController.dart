@@ -6,6 +6,7 @@ import '../helper/Ai_chat_services.dart';
 class AIChatController extends GetxController {
   RxString chatMessage = ''.obs;
   TextEditingController txtAIChat = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   void changeMessage(String value) {
     chatMessage.value = value;
@@ -32,5 +33,23 @@ class AIChatController extends GetxController {
 
   void deleteAIChat({required String chatId, required String sender}) {
     AiChatServices.chatServices.deleteAIChat(chatId: chatId, sender: sender);
+  }
+
+  void scrollToBottom() {
+    Future.delayed(Duration(milliseconds: 300), () {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

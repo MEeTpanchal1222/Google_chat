@@ -22,9 +22,13 @@ class ChatServices {
     doc.sort();
     String docId = doc.join("_");
     print("---------------------$docId---------------------");
+
     return firestore.
     collection("chatroom").doc(docId).collection("chat")
         .orderBy("timestamp",descending: false).snapshots();
+  }
+  void scroll (){
+    controller1.scrollController.jumpTo(controller1.scrollController.position.maxScrollExtent);
   }
 
   void updateChat(String message, String chatId,String sender,

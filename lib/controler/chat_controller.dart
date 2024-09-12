@@ -42,7 +42,7 @@ class ChatController extends GetxController{
   }
 
   void scrollToBottom() {
-    Future.delayed(Duration(milliseconds: 300), () {
+    WidgetsBinding.instance.addPostFrameCallback((_) {Future.delayed(Duration(milliseconds: 300), () {
       if (scrollController.hasClients) {
         scrollController.animateTo(
           scrollController.position.maxScrollExtent,
@@ -50,6 +50,7 @@ class ChatController extends GetxController{
           curve: Curves.easeOut,
         );
       }
+    });
     });
   }
 

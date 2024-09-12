@@ -4,6 +4,7 @@ import 'package:google_chat/controler/auth_controller.dart';
 import 'package:google_chat/helper/Ai_chat_services.dart';
 import 'package:google_chat/helper/chat_services.dart';
 import '../../controler/Ai_ChatController.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AiChatScreen extends StatelessWidget {
   AiChatScreen({Key? key}) : super(key: key);
@@ -87,7 +88,13 @@ class AiChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Chat'),
+        title: Row(children: [
+          const Text('Gemini'),
+          Hero(
+            tag: 'Gemini',
+              transitionOnUserGestures: bool.fromEnvironment(AutofillHints.email),
+              child: Image.asset("assets/icons/google-gemini-icon.png",height: 30.h,width: 20.h,)),
+        ],),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -117,6 +124,7 @@ class AiChatScreen extends StatelessWidget {
                 List chatsId = queryData.map((e) => e.id).toList();
 
                 return ListView.builder(
+                  controller: aiChatController.scrollController,
                   itemCount: chats.length,
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -178,6 +186,7 @@ class AiChatScreen extends StatelessWidget {
                   icon: const Icon(Icons.send),
                   onPressed: () {
                     aiChatController.sendMessage(authController.getCurrentUser()!.email!);
+                    aiChatController.scrollToBottom();
                   },
                 ),
               ],

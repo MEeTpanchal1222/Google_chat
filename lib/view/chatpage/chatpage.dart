@@ -15,6 +15,7 @@ class ChatPage extends StatelessWidget {
   Auth_Controller auth_controller = Get.put(Auth_Controller());
   ChatController controller = Get.put(ChatController());
 
+
   void _showMessageOptions(BuildContext context, {required String messageId, required String currentMessage})
   {
     showMenu(
@@ -105,6 +106,7 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => ChatServices.chatServices.scroll());
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 100.h,
@@ -300,7 +302,7 @@ class ChatPage extends StatelessWidget {
                                       .email ??
                                   auth_controller.phone.value,
                               controller.receiverEmail.value);
-                          ApiService.apiService.sendMessage(token: controller.receivertoken.toString(),body:controller.txtChats.text,title:controller.receiverEmail.value);
+                          ApiService.apiService.sendMessage(token: controller.receivertoken.toString(),body:controller.txtChats.text,title:GoogleFirebaseServices.googleFirebaseServices.auth.currentUser!.email!);
                           controller.txtChats.clear();
                           controller.scrollToBottom();
                         },

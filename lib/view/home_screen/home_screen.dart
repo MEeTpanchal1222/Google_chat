@@ -131,7 +131,7 @@ class Home_screen extends StatelessWidget {
                           ),
                         ),
                         title: Text(userList[index].email!),
-                      subtitle: Text(userList[index].phone!),
+                      subtitle: Text(userList[index].active!),
                     ),
                   ),
                 );
