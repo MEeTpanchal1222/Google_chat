@@ -1,5 +1,6 @@
 <h1>Google Chat App</h1>
-### Key Features:
+
+
 1. **User Authentication**: 
    - Users can sign up and log in using Firebase Authentication.
    - You can implement multiple login methods (email/password, Google, Facebook, or Apple sign-in).
