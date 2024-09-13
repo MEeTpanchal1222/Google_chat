@@ -92,8 +92,40 @@
 - **Firebase Cloud Storage**: For storing media files shared in chat.
 - **Firebase Cloud Messaging (FCM)**: For push notifications.
 
+ ### Light Theme
+<row>
+  
+<img src ="https://github.com/user-attachments/assets/a383a93c-7746-4a45-9e54-8adfa1a1c365"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/4d36a9e6-93f7-404a-a57c-b2f7f57c6b11" alt="slashscreen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/1877d2f8-78d3-42bc-ac97-961abe6fd32c"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/edef6890-2664-45a9-b466-c62b1fa66319"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/6c0a7fa0-8600-4661-bf73-adf0022e2a26"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/b536e591-9607-4b67-9671-16d6b2604a9a"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/8a8de408-1a4c-4fd2-bcd9-f99f159b88c8"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/8ab2e0a3-29c0-4895-92ee-e9734d4d3f46"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/228512b0-6b0c-4b56-9e62-b51010046355"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/0603770c-0ca8-4821-b895-67f4c28c5811"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/d53523b1-b7db-4e01-ba63-f069a90c7bc4"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/16b0985b-2573-47a7-b25e-e195e855d64b"  alt="slash screen" width="200"/>
+</row>
 
-<img src =""  alt="slash screen" width="200"/></p>
+### Dark Theme
+
+<row>
+<img src ="https://github.com/user-attachments/assets/d7e22a14-9954-4e6b-b5d7-17066748779b"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/bc8e9c02-2fc6-454c-9657-bc0fdfefaeee"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/09e6de0f-739c-4d9d-871e-0407a514a088"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/4aac9591-3245-4bbc-bce3-b25374ec6d51"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/d396ba50-0620-418c-8bd6-d3fe733bc486"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/939ac31a-f40a-4317-8847-f35317aa83a9"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/5dddab13-976e-4e9a-bd5a-590a67f822df"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/7a07e7d3-450f-4bb0-8b29-4b8a774e4b52"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/dd2be908-7e66-441f-845b-eea49bef1fd6"  alt="slash screen" width="200"/>
+<img src ="https://github.com/user-attachments/assets/1ea338ec-51d4-4efe-8825-d651af101389"  alt="slash screen" width="200"/>
+   
+</row>
+</p>
+
 
 
 
