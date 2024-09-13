@@ -124,6 +124,14 @@
 <img src ="https://github.com/user-attachments/assets/1ea338ec-51d4-4efe-8825-d651af101389"  alt="slash screen" width="200"/>
    
 </row>
+
+### Notification(dark & light theme)
+
+  <row>
+     <img src ="https://github.com/user-attachments/assets/3680788a-8208-4f73-a7f9-f168b3994930"  alt="slash screen" width="200"/>
+     <img src ="https://github.com/user-attachments/assets/7731e869-9c2c-4649-9695-8c92bcbe76ef"  alt="slash screen" width="200"/>
+
+  </row>
 </p>
 
 
